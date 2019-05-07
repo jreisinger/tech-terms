@@ -3,7 +3,7 @@ package cmd
 import (
 	"fmt"
 
-	"github.com/jreisinger/tech-terms/search/profesia.sk"
+	"github.com/jreisinger/tech-terms/search/profesia"
 	"github.com/spf13/cobra"
 )
 
