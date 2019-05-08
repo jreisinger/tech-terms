@@ -2,6 +2,7 @@
 package profesia
 
 import (
+	"fmt"
 	"regexp"
 	"strconv"
 
@@ -18,6 +19,18 @@ func GetNumJobOffers(term string, ch chan SearchResult) {
 		term: term,
 		offers: getNumPages(term),
 	}
+
+    c := colly.NewCollector()
+
+    c.OnHTML("a", func(e *colly.HTMLElement) {
+		if e.Attr("class") == "title" {
+			fmt.Println(e.Attr("href"))
+		}
+    })
+
+	url := "https://www.profesia.sk/praca/?search_anywhere=python&page_num=1"
+    c.Visit(url)
+
 	ch <- result
 }
 
