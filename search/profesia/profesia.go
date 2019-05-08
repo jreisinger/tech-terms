@@ -2,83 +2,84 @@
 package profesia
 
 import (
-	"log"
-	"regexp"
-	"strconv"
+    "log"
+    u "net/url"
+    "regexp"
+    "strconv"
 
-	"github.com/gocolly/colly"
+    "github.com/gocolly/colly"
 )
 
 type SearchResult struct {
-	Term		string
-	Links		[]string
-	LinksCount	int
+    Term        string
+    Links       []string
+    LinksCount  int
 }
 
 func GetJobOffers(term string, ch chan SearchResult, debug bool) {
-	nPages := getNumPages(term)
-	chOffers := make(chan []string)
+    nPages := getNumPages(term)
+    chOffers := make(chan []string)
 
-	for n := 1; n <= nPages; n++ {
-		url := "https://www.profesia.sk/praca/?search_anywhere=" + term + "&page_num=" + strconv.Itoa(n)
-		if debug {
-			log.Println("Starting a goroutine to scrape", url)
-		}
-		go getJobOffersFromUrl(url, chOffers)
-	}
+    for n := 1; n <= nPages; n++ {
+        url := ("https://www.profesia.sk/praca/?search_anywhere=" + u.QueryEscape(term) + "&page_num=" + strconv.Itoa(n))
+        if debug {
+            log.Println("Starting a goroutine to scrape", url)
+        }
+        go getJobOffersFromUrl(url, chOffers)
+    }
 
-	links := []string{}
+    links := []string{}
 
-	for n := 1; n <= nPages; n++ {
-		moreLinks := <-chOffers
-		links = append(links, moreLinks...)
-	}
+    for n := 1; n <= nPages; n++ {
+        moreLinks := <-chOffers
+        links = append(links, moreLinks...)
+    }
 
-	result := SearchResult{
-		Term: term,
-		Links: links,
-		LinksCount: len(links),
-	}
-	ch<- result
+    result := SearchResult{
+        Term: term,
+        Links: links,
+        LinksCount: len(links),
+    }
+    ch<- result
 }
 
 func getJobOffersFromUrl(url string, ch chan []string) {
     c := colly.NewCollector()
-	links := []string{}
+    links := []string{}
     c.OnHTML("a", func(e *colly.HTMLElement) {
-		if e.Attr("class") == "title" {
-			link := e.Attr("href")
-			links = append(links, link)
-		}
+        if e.Attr("class") == "title" {
+            link := e.Attr("href")
+            links = append(links, link)
+        }
     })
 
     c.Visit(url)
-	ch<- links
+    ch<- links
 }
 
 func getNumPages(term string) int {
     c := colly.NewCollector()
 
-	nPages := 0
+    nPages := 0
 
     // Find and visit all links
     c.OnHTML("a", func(e *colly.HTMLElement) {
-		link := e.Attr("href")
-		if params := getLinkParams(`page_num=(?P<pagenum>\d+)$`, link); len(params) > 0 {
-			pagenum, err := strconv.Atoi(params["pagenum"])
-			if err != nil {
-				panic(err)
-			}
-			if pagenum > nPages {
-				nPages = pagenum
-			}
-		}
+        link := e.Attr("href")
+        if params := getLinkParams(`page_num=(?P<pagenum>\d+)$`, link); len(params) > 0 {
+            pagenum, err := strconv.Atoi(params["pagenum"])
+            if err != nil {
+                panic(err)
+            }
+            if pagenum > nPages {
+                nPages = pagenum
+            }
+        }
     })
 
-	url := "https://www.profesia.sk/search.php?search_anywhere=" + term
+    url := "https://www.profesia.sk/search.php?search_anywhere=" + u.QueryEscape(term)
     c.Visit(url)
 
-	return nPages
+    return nPages
 }
 
 func getLinkParams(regEx, url string) (paramsMap map[string]string) {
