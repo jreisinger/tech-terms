@@ -25,6 +25,8 @@ type Record struct {
 	Count int
 }
 
+var graphTitle string
+
 // plotCmd represents the plot command
 var plotCmd = &cobra.Command{
 	Use:   "plot",
@@ -35,7 +37,7 @@ var plotCmd = &cobra.Command{
 			log.Fatal(err)
 		}
 
-		p.Title.Text = "Scripting languages"
+		p.Title.Text = graphTitle
 		//p.X.Label.Text = "X"
 		// define how we convert and display time.Time values.
 		p.X.Tick.Marker = plot.TimeTicks{Format: "2006-01-02"}
@@ -178,4 +180,5 @@ func init() {
 	// Cobra supports local flags which will only run when this command
 	// is called directly, e.g.:
 	// plotCmd.Flags().BoolP("toggle", "t", false, "Help message for toggle")
+	plotCmd.Flags().StringVarP(&graphTitle, "title", "t", "", "Graph title")
 }
