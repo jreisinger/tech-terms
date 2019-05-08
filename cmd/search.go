@@ -17,7 +17,7 @@ var searchCmd = &cobra.Command{
         ch := make(chan profesia.SearchResult)
 
         for _, term := range searchTerms {
-            go profesia.GetNumJobOffers(term, ch)
+            go profesia.GetJobOffers(term, ch)
         }
 
         for range searchTerms {

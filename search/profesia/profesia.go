@@ -11,27 +11,45 @@ import (
 
 type SearchResult struct {
 	term	string
-	offers	int
+	links	[]string
 }
 
-func GetNumJobOffers(term string, ch chan SearchResult) {
-	result := SearchResult{
-		term: term,
-		offers: getNumPages(term),
+func GetJobOffers(term string, ch chan SearchResult) {
+	nPages := getNumPages(term)
+	chOffers := make(chan []string)
+
+	for n := 1; n <= nPages; n++ {
+		url := "https://www.profesia.sk/praca/?search_anywhere=" + term + "&page_num=" + strconv.Itoa(n)
+		fmt.Println("Starting search for", url)
+		go getJobOffersFromUrl(url, chOffers)
 	}
 
-    c := colly.NewCollector()
+	links := []string{}
 
+	for n := 1; n <= nPages; n++ {
+		moreLinks := <-chOffers
+		links = append(links, moreLinks...)
+	}
+
+	result := SearchResult{
+		term: term,
+		links: links,
+	}
+	ch<- result
+}
+
+func getJobOffersFromUrl(url string, ch chan []string) {
+    c := colly.NewCollector()
+	links := []string{}
     c.OnHTML("a", func(e *colly.HTMLElement) {
 		if e.Attr("class") == "title" {
-			fmt.Println(e.Attr("href"))
+			link := e.Attr("href")
+			links = append(links, link)
 		}
     })
 
-	url := "https://www.profesia.sk/praca/?search_anywhere=python&page_num=1"
     c.Visit(url)
-
-	ch <- result
+	ch<- links
 }
 
 func getNumPages(term string) int {
