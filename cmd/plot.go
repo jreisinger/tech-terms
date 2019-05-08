@@ -74,7 +74,7 @@ var plotCmd = &cobra.Command{
 		}
 
 		// Save the plot to a PNG file.
-		if err := p.Save(40*vg.Centimeter, 20*vg.Centimeter, "points.png"); err != nil {
+		if err := p.Save(40*vg.Centimeter, 20*vg.Centimeter, graphTitle + ".png"); err != nil {
 			log.Fatal(err)
 		}
 	},
@@ -180,5 +180,5 @@ func init() {
 	// Cobra supports local flags which will only run when this command
 	// is called directly, e.g.:
 	// plotCmd.Flags().BoolP("toggle", "t", false, "Help message for toggle")
-	plotCmd.Flags().StringVarP(&graphTitle, "title", "t", "", "Graph title")
+	plotCmd.Flags().StringVarP(&graphTitle, "title", "t", "graph", "Graph title and file name")
 }
