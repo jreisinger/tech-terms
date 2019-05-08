@@ -2,6 +2,7 @@ package cmd
 
 import (
 	"bufio"
+    "database/sql"
 	"encoding/csv"
 	_ "fmt"
 	"io"
@@ -28,7 +29,7 @@ type Record struct {
 var plotCmd = &cobra.Command{
 	Use:   "plot",
 	Short: "Generate a graph containing the specified terms",
-	Run: func(cmd *cobra.Command, args []string) {
+	Run: func(cmd *cobra.Command, searchTerms []string) {
 		p, err := plot.New()
 		if err != nil {
 			log.Fatal(err)
@@ -37,15 +38,34 @@ var plotCmd = &cobra.Command{
 		p.Title.Text = "Scripting languages"
 		//p.X.Label.Text = "X"
 		// define how we convert and display time.Time values.
-		p.X.Tick.Marker = plot.TimeTicks{Format: "2006-01-02\n15:04"}
+		p.X.Tick.Marker = plot.TimeTicks{Format: "2006-01-02"}
 		p.Y.Label.Text = "Job offers"
+		// legend position
+		p.Legend.Top = true
+		p.Legend.Left = true
+
+		var data []interface{}
+		for _, term := range searchTerms {
+			data = append(data, term)
+			data = append(data, jobsPoints(term))
+		}
+
+		//for _, term := range searchTerms {
+		//	err = plotutil.AddLines(p,
+		//		term, jobsPoints(term),
+		//	)
+		//	if err != nil {
+		//		log.Fatal(err)
+		//	}
+		//}
 
 		err = plotutil.AddLines(p,
-			"bash", jobsPoints("bash"),
-			"perl", jobsPoints("perl"),
-			"python", jobsPoints("python"),
-			"ruby", jobsPoints("ruby"),
-			"shell", jobsPoints("shell"),
+			//"bash", jobsPoints("bash"),
+			//"perl", jobsPoints("perl"),
+			//"python", jobsPoints("python"),
+			//"ruby", jobsPoints("ruby"),
+			//"shell", jobsPoints("shell"),
+			data...,
 		)
 		if err != nil {
 			log.Fatal(err)
@@ -93,9 +113,36 @@ func readCSV(csvFileName string) []Record {
 	return records
 }
 
+func readSqlite() []Record {
+    database, err := sql.Open("sqlite3", "./jobs-count.db")
+    if err != nil {
+        log.Fatalln(err)
+    }
+
+    rows, err := database.Query("SELECT date, term, count FROM jobs")
+    if err != nil {
+        log.Fatalln(err)
+    }
+
+    var date string
+    var term string
+    var count int
+	var records []Record
+    for rows.Next() {
+        rows.Scan(&date, &term, &count)
+		records = append(records, Record{
+			Date:  date,
+			Term:  term,
+			Count: count,
+		})
+    }
+	return records
+}
+
 // Generate points to be graphed for a given term
 func jobsPoints(term string) plotter.XYs {
-	records := readCSV("jobs-count.csv")
+	//records := readCSV("jobs-count.csv")
+	records := readSqlite()
 
 	var newRecords []Record
 
