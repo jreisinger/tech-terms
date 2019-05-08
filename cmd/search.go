@@ -11,9 +11,18 @@ import (
 var searchCmd = &cobra.Command{
 	Use:   "search",
 	Short: "Search the specified terms",
-	Run: func(cmd *cobra.Command, args []string) {
+	Run: func(cmd *cobra.Command, searchTerms []string) {
 		fmt.Println("search called")
-		fmt.Println(profesia.GetNumberOfPages())
+
+        ch := make(chan profesia.SearchResult)
+
+        for _, term := range searchTerms {
+            go profesia.GetNumJobOffers(term, ch)
+        }
+
+        for range searchTerms {
+            fmt.Printf("%v\n", <-ch)
+        }
 	},
 }
 
