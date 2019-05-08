@@ -2,6 +2,7 @@ package cmd
 
 import (
 	"fmt"
+	"log"
 
 	"github.com/jreisinger/tech-terms/search/profesia"
 	"github.com/spf13/cobra"
@@ -12,16 +13,17 @@ var searchCmd = &cobra.Command{
 	Use:   "search",
 	Short: "Search the specified terms",
 	Run: func(cmd *cobra.Command, searchTerms []string) {
-		fmt.Println("search called")
-
         ch := make(chan profesia.SearchResult)
 
         for _, term := range searchTerms {
+			log.Println("Starting a goroutine to search for", term)
             go profesia.GetJobOffers(term, ch)
         }
 
         for range searchTerms {
-            fmt.Printf("%v\n", <-ch)
+            //fmt.Printf("%v\n", <-ch)
+			result := <-ch
+			fmt.Println(result.Term, result.LinksCount)
         }
 	},
 }

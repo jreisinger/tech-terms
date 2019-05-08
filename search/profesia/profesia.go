@@ -2,7 +2,7 @@
 package profesia
 
 import (
-	"fmt"
+	"log"
 	"regexp"
 	"strconv"
 
@@ -10,8 +10,9 @@ import (
 )
 
 type SearchResult struct {
-	term	string
-	links	[]string
+	Term		string
+	Links		[]string
+	LinksCount	int
 }
 
 func GetJobOffers(term string, ch chan SearchResult) {
@@ -20,7 +21,7 @@ func GetJobOffers(term string, ch chan SearchResult) {
 
 	for n := 1; n <= nPages; n++ {
 		url := "https://www.profesia.sk/praca/?search_anywhere=" + term + "&page_num=" + strconv.Itoa(n)
-		fmt.Println("Starting search for", url)
+		log.Println("Starting a goroutine to scrape", url)
 		go getJobOffersFromUrl(url, chOffers)
 	}
 
@@ -32,8 +33,9 @@ func GetJobOffers(term string, ch chan SearchResult) {
 	}
 
 	result := SearchResult{
-		term: term,
-		links: links,
+		Term: term,
+		Links: links,
+		LinksCount: len(links),
 	}
 	ch<- result
 }
@@ -61,7 +63,10 @@ func getNumPages(term string) int {
     c.OnHTML("a", func(e *colly.HTMLElement) {
 		link := e.Attr("href")
 		if params := getLinkParams(`page_num=(?P<pagenum>\d+)$`, link); len(params) > 0 {
-			pagenum, _ := strconv.Atoi(params["pagenum"])
+			pagenum, err := strconv.Atoi(params["pagenum"])
+			if err != nil {
+				panic(err)
+			}
 			if pagenum > nPages {
 				nPages = pagenum
 			}
