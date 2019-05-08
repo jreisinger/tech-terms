@@ -15,13 +15,15 @@ type SearchResult struct {
 	LinksCount	int
 }
 
-func GetJobOffers(term string, ch chan SearchResult) {
+func GetJobOffers(term string, ch chan SearchResult, debug bool) {
 	nPages := getNumPages(term)
 	chOffers := make(chan []string)
 
 	for n := 1; n <= nPages; n++ {
 		url := "https://www.profesia.sk/praca/?search_anywhere=" + term + "&page_num=" + strconv.Itoa(n)
-		log.Println("Starting a goroutine to scrape", url)
+		if debug {
+			log.Println("Starting a goroutine to scrape", url)
+		}
 		go getJobOffersFromUrl(url, chOffers)
 	}
 

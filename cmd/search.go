@@ -16,8 +16,10 @@ var searchCmd = &cobra.Command{
         ch := make(chan profesia.SearchResult)
 
         for _, term := range searchTerms {
-			log.Println("Starting a goroutine to search for", term)
-            go profesia.GetJobOffers(term, ch)
+			if Debug {
+				log.Println("Starting a goroutine to search for", term)
+			}
+            go profesia.GetJobOffers(term, ch, Debug)
         }
 
         for range searchTerms {
@@ -39,5 +41,6 @@ func init() {
 
 	// Cobra supports local flags which will only run when this command
 	// is called directly, e.g.:
+	// searchCmd.Flags().BoolP("toggle", "t", false, "Help message for toggle")
 	// searchCmd.Flags().BoolP("toggle", "t", false, "Help message for toggle")
 }

@@ -10,11 +10,12 @@ import (
 )
 
 var cfgFile string
+var Debug bool
 
 // rootCmd represents the base command when called without any subcommands
 var rootCmd = &cobra.Command{
 	Use:   "tech-terms",
-	Short: "Search, store and display technical terms in job sites.",
+	Short: "Search, store and plot technical terms in job sites.",
 	// Uncomment the following line if your bare application
 	// has an action associated with it:
 	//	Run: func(cmd *cobra.Command, args []string) { },
@@ -36,6 +37,7 @@ func init() {
 	// Cobra supports persistent flags, which, if defined here,
 	// will be global for your application.
 	rootCmd.PersistentFlags().StringVar(&cfgFile, "config", "", "config file (default is $HOME/.tech-terms.yaml)")
+	rootCmd.PersistentFlags().BoolVarP(&Debug, "debug", "d", false, "show debug info")
 
 	// Cobra also supports local flags, which will only run
 	// when this action is called directly.
