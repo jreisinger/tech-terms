@@ -10,7 +10,7 @@ Search (technical) terms in job sites. Calculate number of job offers per term, 
 
 * [x] search for many terms quickly (gorotutines)
 * [x] persist search results without duplicates (sqlite)
-* [ ] find place where to store the DB (github, local disk + backups)
+* [x] find place where to store the DB (github, ~~local disk + backups~~)
 * [ ] show graph on the Internet
 * [ ] setup regular graphs updates
 * [ ] add more job sites
