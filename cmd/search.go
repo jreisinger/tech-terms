@@ -25,6 +25,7 @@ var searchCmd = &cobra.Command{
             if Debug {
                 log.Println("Starting a goroutine to search for", term)
             }
+            time.Sleep(time.Millisecond * 500)
             go profesia.GetJobOffers(term, ch, Debug)
         }
 
