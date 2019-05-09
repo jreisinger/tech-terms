@@ -8,7 +8,7 @@ Search (technical) terms in job sites. Calculate number of job offers per term, 
 
 ## Roadmap
 
-* [x] search for many terms quickly (gorotutines)
+* [x] search for many terms quickly (goroutines)
 * [x] persist search results without duplicates (sqlite)
 * [x] find place where to store the DB ([github](https://github.com/jreisinger/profesia-jobs-per-term), ~~local disk + backups~~)
 * [ ] show graph on the Internet
