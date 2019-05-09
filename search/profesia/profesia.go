@@ -19,21 +19,34 @@ type SearchResult struct {
 func GetJobOffers(term string, ch chan SearchResult, debug bool) {
     nPages := getNumPages(term)
     chOffers := make(chan []string)
-
-    for n := 1; n <= nPages; n++ {
-        url := ("https://www.profesia.sk/praca/?search_anywhere=" + u.QueryEscape(term) + "&page_num=" + strconv.Itoa(n))
-        if debug {
-            log.Println("Starting a goroutine to scrape", url)
-        }
-        go getJobOffersFromUrl(url, chOffers)
-    }
-
     links := []string{}
 
-    for n := 1; n <= nPages; n++ {
-        moreLinks := <-chOffers
-        links = append(links, moreLinks...)
-    }
+	if nPages == 0 { // just one page?
+		url := ("https://www.profesia.sk/praca/?search_anywhere=" + u.QueryEscape(term))
+		if debug {
+			log.Println("Starting a goroutine to scrape", url)
+		}
+		go getJobOffersFromUrl(url, chOffers)
+
+		moreLinks := <-chOffers
+		links = append(links, moreLinks...)
+	}
+
+
+	if nPages > 0 {
+		for n := 1; n <= nPages; n++ {
+			url := ("https://www.profesia.sk/praca/?search_anywhere=" + u.QueryEscape(term) + "&page_num=" + strconv.Itoa(n))
+			if debug {
+				log.Println("Starting a goroutine to scrape", url)
+			}
+			go getJobOffersFromUrl(url, chOffers)
+		}
+
+		for n := 1; n <= nPages; n++ {
+			moreLinks := <-chOffers
+			links = append(links, moreLinks...)
+		}
+	}
 
     result := SearchResult{
         Term: term,
