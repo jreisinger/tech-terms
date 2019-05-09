@@ -42,7 +42,7 @@ var searchCmd = &cobra.Command{
 }
 
 func storeToSqlite(term string, count int) {
-    database, err := sql.Open("sqlite3", "./jobs-count.db")
+    database, err := sql.Open("sqlite3", "data/jobs-count.db")
     if err != nil {
         log.Fatalln(err)
     }
