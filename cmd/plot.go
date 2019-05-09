@@ -74,7 +74,7 @@ var plotCmd = &cobra.Command{
 		}
 
 		// Save the plot to a PNG file.
-		if err := p.Save(40*vg.Centimeter, 20*vg.Centimeter, graphTitle + ".png"); err != nil {
+		if err := p.Save(40*vg.Centimeter, 20*vg.Centimeter, "graphs/" + graphTitle + ".png"); err != nil {
 			log.Fatal(err)
 		}
 	},
