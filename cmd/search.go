@@ -17,7 +17,7 @@ var store bool
 // searchCmd represents the search command
 var searchCmd = &cobra.Command{
     Use:   "search",
-    Short: "Search the specified terms",
+    Short: "Search (and store) the specified terms",
     Run: func(cmd *cobra.Command, searchTerms []string) {
         ch := make(chan profesia.SearchResult)
 
