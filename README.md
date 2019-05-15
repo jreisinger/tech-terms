@@ -12,5 +12,5 @@ Search (technical) terms in job sites. Calculate number of job offers per term, 
 * [x] persist search results without duplicates (sqlite)
 * [x] find place where to store the DB ([github](https://github.com/jreisinger/profesia-jobs-per-term), ~~local disk + backups~~)
 * [x] show graphs on the Internet -> https://jreisinger.github.io/profesia-jobs-per-term/
-* [ ] setup regular graphs updates
+* [x] setup regular graphs updates
 * [ ] add more job sites
