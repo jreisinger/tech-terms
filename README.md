@@ -4,7 +4,7 @@
 
 Search (technical) terms in job sites. Calculate number of job offers per term, store and plot (graph) the results. Job sites currently covered:
 
-* https://profesia.sk -> https://jreisinger.github.io/profesia-jobs-per-term/
+* https://profesia.sk -> https://github.com/jreisinger/profesia-jobs-per-term
 
 ## Roadmap
 
