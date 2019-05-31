@@ -6,6 +6,7 @@ import (
     u "net/url"
     "regexp"
     "strconv"
+    "strings"
 
     "github.com/gocolly/colly"
 )
@@ -59,7 +60,7 @@ func getJobOffersFromUrl(url string, ch chan []string) {
     c := colly.NewCollector()
     links := []string{}
     c.OnHTML("a", func(e *colly.HTMLElement) {
-        if e.Attr("class") == "title" {
+        if strings.HasPrefix(e.Attr("id"), "offer") {
             link := e.Attr("href")
             links = append(links, link)
         }
