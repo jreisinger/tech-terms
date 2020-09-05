@@ -6,11 +6,11 @@ Search (technical) terms in job sites. Calculate number of job offers per term, 
 
 * https://profesia.sk -> https://github.com/jreisinger/profesia-jobs-per-term
 
-## Usage
+## Installation and sample usage
 
 ```
-go install
-tech-terms search perl python ruby
+$ go install
+$ tech-terms search perl python ruby
 ```
 
 ## Roadmap
