@@ -45,5 +45,5 @@ require (
 	golang.org/x/text v0.3.2 // indirect
 	google.golang.org/appengine v1.6.1 // indirect
 	gopkg.in/ini.v1 v1.51.0 // indirect
-	gopkg.in/yaml.v2 v2.2.4 // indirect
+	gopkg.in/yaml.v2 v2.2.8 // indirect
 )
