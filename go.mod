@@ -40,9 +40,9 @@ require (
 	github.com/subosito/gotenv v1.2.0 // indirect
 	github.com/temoto/robotstxt v1.1.1 // indirect
 	golang.org/x/image v0.18.0 // indirect
-	golang.org/x/net v0.33.0 // indirect
-	golang.org/x/sys v0.28.0 // indirect
-	golang.org/x/text v0.21.0 // indirect
+	golang.org/x/net v0.36.0 // indirect
+	golang.org/x/sys v0.30.0 // indirect
+	golang.org/x/text v0.22.0 // indirect
 	google.golang.org/appengine v1.6.1 // indirect
 	gopkg.in/ini.v1 v1.51.0 // indirect
 	gopkg.in/yaml.v2 v2.2.8 // indirect
