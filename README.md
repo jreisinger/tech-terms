@@ -10,7 +10,7 @@ Search (technical) terms in job sites. Calculate number of job offers per term, 
 
 ```
 $ go install
-$ $(go env GOPATH)/bin/tech-terms search perl python ruby
+$ tech-terms search perl python ruby
 ```
 
 ## Roadmap
